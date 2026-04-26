@@ -279,6 +279,12 @@ def match_orders(
         for product, trades in data.trades[state.timestamp].items()
     }
 
+    # IMC's TradingState only carries fills from the previous tick. Reset both
+    # dicts here so stale entries from earlier ticks don't leak to next tick's
+    # trader.run().
+    state.own_trades.clear()
+    state.market_trades.clear()
+
     for product in data.products:
         new_trades = []
 
